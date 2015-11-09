@@ -2,7 +2,7 @@ CC = g++
 OBJS = main.cpp
 EXEC = a.out 
 CFLAGS = -w
-LFLAGS = -lSDL2 -lGL -lGLU -lGLEW
+LFLAGS = -lSDL2 -lGL -lGLEW
 
 
 #This is the target that compiles our executable
