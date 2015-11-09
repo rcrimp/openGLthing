@@ -8,16 +8,13 @@
 
 #include <GL/glew.h>
 #include <GL/glu.h>
-#include <SDL.h>
-#include <SDL_opengl.h>
-#include <stdio.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_opengl.h>
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
-#include <random>
 
 #define WIND_WIDTH 800 
 #define WIND_HEIGHT 600 
@@ -194,7 +191,7 @@ void createGLScene() {
 	char eBuffer[512];
 
 	wavefront mesh;
-	importWavefront("../model.obj", mesh);
+	importWavefront("model.obj", mesh);
 
 	/*for (int i = 0; i < mesh.vertex.size(); i++){
 		std::cerr << "v(" << mesh.vertex[i].x << ", " << mesh.vertex[i].y << ", " << mesh.vertex[i].z << ')' << std::endl;
