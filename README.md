@@ -2,7 +2,7 @@
 
 Some experiments with openGL, with the intention of creating a simple render engine.
 
-## dependancies
+## dependencies
 SDL2
 Glew
 GLM
