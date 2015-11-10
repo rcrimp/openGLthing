@@ -6,6 +6,7 @@
 #include <SDL2/SDL_opengl.h>
 
 #include "object.h"
+#include "glsl.h"
 
 class engine {
    public:
@@ -22,7 +23,8 @@ class engine {
       SDL_Window *window = NULL;
       SDL_GLContext glContext = NULL;
 
-      object test;
+      object testObject;
+      glsl testShader;
 
       void init();
       void input();
@@ -33,6 +35,7 @@ class engine {
       void createWindow(const char* title, unsigned width, unsigned height);
       void destroyWindow();
       void createOpenGLContext();
+      void initShaders();
       void createScene();
       void destroyScene();
 };

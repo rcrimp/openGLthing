@@ -18,10 +18,10 @@ class object {
 
       wavefront mesh;
 
-      GLint posAttrib;
+      //GLint posAttrib;
       // shader stuff
-      GLuint shaderProgram, fragShader, vertexShader;
+      //GLuint shaderProgram, fragShader, vertexShader;
       // camera projection stuff
-      GLint uniModel, uniView, uniProj;
-      glm::mat4 model, view, proj;
+      //GLint uniModel, uniView, uniProj;
+      //glm::mat4 model, view, proj;
 };

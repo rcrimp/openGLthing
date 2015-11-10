@@ -63,14 +63,12 @@ void engine::createOpenGLContext() {
    /* glew */
    glewExperimental = GL_TRUE;
    glewInit();
-   //glGenBuffers(1, &vertexBuffer);
-   //printf("%u\n", vertexBuffer);
 }
 void engine::createScene() {
    GLint status;
    char eBuffer[512];
 
-   test.load();
+   testObject.load();
 
    //glFrontFace(GL_CCW);
    //glCullFace(GL_BACK);
@@ -79,12 +77,13 @@ void engine::createScene() {
 }
 
 void engine::destroyScene() {
-   /* glDeleteProgram(shaderProgram);
-      glDeleteShader(fragShader);
-      glDeleteShader(vertexShader);
-      glDeleteBuffers(1, &vbo);
-      glDeleteVertexArrays(1, &vao); 
-    */
+
+}
+
+void engine::initShaders() {
+   testShader.compile("glsl/vertex.glsl", "glsl/fragment.glsl");
+   testShader.addAttribute("position");
+   testShader.link();
 }
 
 void engine::input() {
@@ -102,8 +101,11 @@ void engine::update() {
 
 void engine::render() {
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-   
-   test.draw();
+  
+   testShader.enable(); 
+   testObject.draw();
+   testShader.disable();
 
    SDL_GL_SwapWindow(window);
+
 }

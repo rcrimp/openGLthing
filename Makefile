@@ -1,7 +1,7 @@
 CC = g++
-OBJS = main.cpp engine.cpp object.cpp wavefront.cpp
+OBJS = main.cpp engine.cpp object.cpp wavefront.cpp glsl.cpp
 EXEC = a.out 
-CFLAGS = -w
+CFLAGS = -W -Wall -g
 LFLAGS = -lSDL2 -lGL -lGLEW
 
 
