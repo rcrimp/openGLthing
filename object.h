@@ -2,6 +2,7 @@
 #include <GL/glew.h>
 #include "wavefront.h"
 #include <glm/glm.hpp>
+#include "glsl.h"
 
 class object {
    public:
@@ -17,11 +18,4 @@ class object {
       GLuint ebo;
 
       wavefront mesh;
-
-      //GLint posAttrib;
-      // shader stuff
-      //GLuint shaderProgram, fragShader, vertexShader;
-      // camera projection stuff
-      //GLint uniModel, uniView, uniProj;
-      //glm::mat4 model, view, proj;
 };

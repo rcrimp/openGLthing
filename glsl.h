@@ -12,11 +12,12 @@ class glsl {
       void enable();
       void disable();
       void addAttribute(const char* attributeName);
+
+      GLuint program, vertexShader, fragmentShader;
    private:
       int attributeCount;
-      
+
       void compile(const char* sourceFilePath, GLuint id);
-      
-      GLuint program, vertexShader, fragmentShader;
-};      
+};
+
 

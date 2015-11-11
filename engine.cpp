@@ -64,15 +64,19 @@ void engine::createOpenGLContext() {
    glewExperimental = GL_TRUE;
    glewInit();
 }
-void engine::createScene() {
-   GLint status;
-   char eBuffer[512];
 
+void engine::createScene() {
+   initShaders();
    testObject.load();
 
-   //glFrontFace(GL_CCW);
-   //glCullFace(GL_BACK);
-   //glEnable(GL_CULL_FACE);
+   //TODO move this
+   GLint posAttrib = glGetAttribLocation(testShader.program, "position");
+   glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
+   glEnableVertexAttribArray(posAttrib);
+
+   glFrontFace(GL_CCW);
+   glCullFace(GL_BACK);
+   glEnable(GL_CULL_FACE);
    glEnable(GL_DEPTH_TEST);
 }
 
@@ -82,8 +86,25 @@ void engine::destroyScene() {
 
 void engine::initShaders() {
    testShader.compile("glsl/vertex.glsl", "glsl/fragment.glsl");
-   testShader.addAttribute("position");
    testShader.link();
+   //testShader.addAttribute("position");
+
+   // shader uniforms
+   GLuint uniModel = glGetUniformLocation(testShader.program, "model");
+   GLuint uniView =  glGetUniformLocation(testShader.program, "view");
+   GLuint uniProj =  glGetUniformLocation(testShader.program, "proj");
+
+   glm::mat4 view = glm::lookAt(
+         glm::vec3(3.0f, 3.0f, 3.0f),
+         glm::vec3(0.0f, 0.0f, 0.0f),
+         glm::vec3(0.0f, 0.0f, 1.0f)
+         );
+   glm::mat4 proj = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 1.0f, 10.0f);
+   glm::mat4 model = glm::mat4();
+
+   glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+   glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
+   glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(proj));
 }
 
 void engine::input() {
@@ -101,11 +122,10 @@ void engine::update() {
 
 void engine::render() {
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  
-   testShader.enable(); 
+
+   testShader.enable();
    testObject.draw();
    testShader.disable();
 
    SDL_GL_SwapWindow(window);
-
 }

@@ -30,6 +30,8 @@ void glsl::link(){
    glAttachShader(program, vertexShader);
    glAttachShader(program, fragmentShader);
 
+   //TODO fix this 
+   glBindFragDataLocation(program, 0, "outColour");
    glLinkProgram(program);
 
    GLint status = 0;
@@ -52,20 +54,41 @@ void glsl::link(){
    glDetachShader(program, fragmentShader);
    glDeleteShader(vertexShader);
    glDeleteShader(fragmentShader);
+
+   /* delete me */
+   // enableShader
+   glUseProgram(program);
+
+   // more shader shit
+   GLuint uniModel = glGetUniformLocation(program, "model");
+   GLuint uniView =  glGetUniformLocation(program, "view");
+   GLuint uniProj =  glGetUniformLocation(program, "proj");
+
+   glm::mat4 view = glm::lookAt(
+         glm::vec3(3.0f, 3.0f, 3.0f),
+         glm::vec3(0.0f, 0.0f, 0.0f),
+         glm::vec3(0.0f, 0.0f, 1.0f)
+         );
+   glm::mat4 proj = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 1.0f, 10.0f);
+   glm::mat4 model = glm::mat4();
+
+   glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+   glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
+   glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(proj));
 }
 
 void glsl::enable(){
    glUseProgram(program);
-   for(int i = 0; i < attributeCount; i++){
-      glEnableVertexAttribArray(i);
-   }
+   //for(int i = 0; i < attributeCount; i++){
+   //   glEnableVertexAttribArray(i);
+   //}
 }
 
 void glsl::disable(){
    glUseProgram(0);
-   for (int i = 0; i < attributeCount; i++){
-      glDisableVertexAttribArray(i);
-   }
+   //for (int i = 0; i < attributeCount; i++){
+   //   glDisableVertexAttribArray(i);
+   //}
 }
 
 void glsl::addAttribute(const char* attributeName){
@@ -85,7 +108,9 @@ void glsl::compile(const char* sourceFilePath, GLuint id) {
    }
    shaderFile.close();
 
-   glShaderSource(id, 1, (const GLchar**)fileContents.c_str(), NULL);
+   const GLchar* srcPtr = (const GLchar*)fileContents.c_str();
+
+   glShaderSource(id, 1, &srcPtr, NULL);
    glCompileShader(id); 
 
    GLint status = 0;
@@ -99,23 +124,7 @@ void glsl::compile(const char* sourceFilePath, GLuint id) {
       glGetShaderInfoLog(id, maxLength, &maxLength, &errorLog[0]);
 
       glDeleteShader(id);
-      
+
       std::printf("%s\n", &(errorLog[0]));
    }
-
-   GLint uniModel = glGetUniformLocation(program, "model");
-   GLint uniView =  glGetUniformLocation(program, "view");
-   GLint uniProj =  glGetUniformLocation(program, "proj");
-
-   glm::mat4 view = glm::lookAt(
-         glm::vec3(3.0f, 3.0f, 3.0f),
-         glm::vec3(0.0f, 0.0f, 0.0f),
-         glm::vec3(0.0f, 0.0f, 1.0f)
-         );
-   glm::mat4 proj = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 1.0f, 10.0f);
-   glm::mat4 model = glm::mat4();
-
-   glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-   glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
-   glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(proj));
 }

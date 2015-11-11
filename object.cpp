@@ -18,40 +18,34 @@ object::object() {
 }
 
 object::~object() {
+   glDeleteBuffers(1, &ebo);
    glDeleteBuffers(1, &vbo);
    glDeleteVertexArrays(1, &vao);
 }
 
 void object::load() {
-   GLint status;
-   char eBuffer[512];
-
    mesh.open("model.obj"); 
 
    glGenVertexArrays(1, &vao);
    glBindVertexArray(vao);
 
-   if (vbo == 0) {
-      glGenBuffers(1, &vbo);
-   }
+   glGenBuffers(1, &vbo);
    glBindBuffer(GL_ARRAY_BUFFER, vbo);
    glBufferData(GL_ARRAY_BUFFER, mesh.vertex.size() * sizeof(float), mesh.vertex.data(), GL_STATIC_DRAW);
-   //   glBindBuffer(GL_ARRAY_BUFFER, 0);
+   //glBindBuffer(GL_ARRAY_BUFFER, 0);
 
    glGenBuffers(1, &ebo);
    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
    glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh.face.size() * sizeof(GLuint), mesh.face.data(), GL_STATIC_DRAW);
-   //  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER
+   //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+   
+   // vertex attributes
+   // unbind / delete stuff
 }
 
-void object::draw() {
-   glBindBuffer(GL_ARRAY_BUFFER, vbo);
-   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-   glEnableVertexAttribArray(0);
-  
-   glDrawElements(GL_TRIANGLES, mesh.face.size(), GL_UNSIGNED_INT, 0);
 
-   glDisableVertexAttribArray(0);
-   glBindBuffer(GL_ARRAY_BUFFER, 0);
-   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+void object::draw() {
+   glBindVertexArray(vao);
+   glDrawElements(GL_TRIANGLES, mesh.face.size(), GL_UNSIGNED_INT, 0);
+   glBindVertexArray(0);
 }
