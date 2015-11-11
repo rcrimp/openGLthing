@@ -89,10 +89,11 @@ void engine::initShaders() {
    testShader.link();
    //testShader.addAttribute("position");
 
+
    // shader uniforms
-   GLuint uniModel = glGetUniformLocation(testShader.program, "model");
-   GLuint uniView =  glGetUniformLocation(testShader.program, "view");
-   GLuint uniProj =  glGetUniformLocation(testShader.program, "proj");
+   GLint uniModel = glGetUniformLocation(testShader.program, "model");
+   GLint uniView =  glGetUniformLocation(testShader.program, "view");
+   GLint uniProj =  glGetUniformLocation(testShader.program, "proj");
 
    glm::mat4 view = glm::lookAt(
          glm::vec3(3.0f, 3.0f, 3.0f),
@@ -102,6 +103,7 @@ void engine::initShaders() {
    glm::mat4 proj = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 1.0f, 10.0f);
    glm::mat4 model = glm::mat4();
 
+   testShader.enable();
    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
    glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
    glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(proj));

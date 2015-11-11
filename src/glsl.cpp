@@ -54,27 +54,6 @@ void glsl::link(){
    glDetachShader(program, fragmentShader);
    glDeleteShader(vertexShader);
    glDeleteShader(fragmentShader);
-
-   /* delete me */
-   // enableShader
-   glUseProgram(program);
-
-   // more shader shit
-   GLuint uniModel = glGetUniformLocation(program, "model");
-   GLuint uniView =  glGetUniformLocation(program, "view");
-   GLuint uniProj =  glGetUniformLocation(program, "proj");
-
-   glm::mat4 view = glm::lookAt(
-         glm::vec3(3.0f, 3.0f, 3.0f),
-         glm::vec3(0.0f, 0.0f, 0.0f),
-         glm::vec3(0.0f, 0.0f, 1.0f)
-         );
-   glm::mat4 proj = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 1.0f, 10.0f);
-   glm::mat4 model = glm::mat4();
-
-   glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-   glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
-   glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(proj));
 }
 
 void glsl::enable(){

@@ -1,5 +1,5 @@
 #version 150 core
-in vec3 position;
+attribute vec3 position;
 out vec3 normal;
 out vec3 light;
 uniform mat4 model;
