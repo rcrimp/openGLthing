@@ -24,7 +24,7 @@ object::~object() {
 }
 
 void object::load() {
-   mesh.open("model.obj"); 
+   mesh.open("mesh/model.obj"); 
 
    glGenVertexArrays(1, &vao);
    glBindVertexArray(vao);
