@@ -69,12 +69,19 @@ void engine::createScene() {
    initShaders();
    testObject.load();
    
-   glFrontFace(GL_CCW);
-   glCullFace(GL_BACK);
-   glEnable(GL_CULL_FACE);
+   //glFrontFace(GL_CCW);
+   //glCullFace(GL_BACK);
+   //glEnable(GL_CULL_FACE);
    glEnable(GL_DEPTH_TEST);
-   
-   //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+   /* line mode for debugging */
+   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+   glLineWidth(1.0f);
+   /* line antialiasing */
+   glEnable(GL_BLEND);
+   glEnable(GL_LINE_SMOOTH);
+   glHint(GL_LINE_SMOOTH, GL_NICEST);
+   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void engine::destroyScene() {
@@ -103,7 +110,7 @@ void engine::update() {
    GLint uniProj =  glGetUniformLocation(testShader.program, "proj");
 
    glm::mat4 view = glm::lookAt(
-         glm::vec3(3.0f, 3.0f, 3.0f),
+         glm::vec3(3.0f, 3.0f, 0.0f),
          glm::vec3(0.0f, 0.0f, 0.0f),
          glm::vec3(0.0f, 0.0f, 1.0f)
          );
