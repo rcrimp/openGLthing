@@ -31,18 +31,18 @@ void object::load() {
 
    glGenBuffers(1, &vbo);
    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-   glBufferData(GL_ARRAY_BUFFER, mesh.vertex.size() * sizeof(float), mesh.vertex.data(), GL_STATIC_DRAW);
-   //glBindBuffer(GL_ARRAY_BUFFER, 0);
+   glBufferData(GL_ARRAY_BUFFER, mesh.vertex.size() * sizeof(glm::vec3), mesh.vertex.data(), GL_STATIC_DRAW);
 
    glGenBuffers(1, &ebo);
    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
    glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh.face.size() * sizeof(GLuint), mesh.face.data(), GL_STATIC_DRAW);
-   //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
    
-   // vertex attributes
-   // unbind / delete stuff
-}
+   GLint posAttrib = 0; //glGetAttribLocation(testShader.program, "position");
+   glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (GLvoid*)0);
+   glEnableVertexAttribArray(posAttrib);
 
+   glBindVertexArray(0);
+}
 
 void object::draw() {
    glBindVertexArray(vao);

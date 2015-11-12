@@ -42,7 +42,7 @@ void engine::createWindow(const char* title, unsigned width, unsigned height) {
    SDL_Init(SDL_INIT_VIDEO);
    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
    window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
 } 
 
@@ -55,7 +55,7 @@ void engine::destroyWindow() {
 void engine::createOpenGLContext() {
    /* gl */
    glContext = SDL_GL_CreateContext(window);
-   SDL_GL_SetSwapInterval(0);
+   SDL_GL_SetSwapInterval(1);
    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
    glShadeModel(GL_FLAT);
    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -68,16 +68,13 @@ void engine::createOpenGLContext() {
 void engine::createScene() {
    initShaders();
    testObject.load();
-
-   //TODO move this
-   GLint posAttrib = glGetAttribLocation(testShader.program, "position");
-   glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
-   glEnableVertexAttribArray(posAttrib);
-
+   
    glFrontFace(GL_CCW);
    glCullFace(GL_BACK);
    glEnable(GL_CULL_FACE);
    glEnable(GL_DEPTH_TEST);
+   
+   //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
 
 void engine::destroyScene() {
@@ -85,28 +82,6 @@ void engine::destroyScene() {
 }
 
 void engine::initShaders() {
-   testShader.compile("glsl/vertex.glsl", "glsl/fragment.glsl");
-   testShader.link();
-   //testShader.addAttribute("position");
-
-
-   // shader uniforms
-   GLint uniModel = glGetUniformLocation(testShader.program, "model");
-   GLint uniView =  glGetUniformLocation(testShader.program, "view");
-   GLint uniProj =  glGetUniformLocation(testShader.program, "proj");
-
-   glm::mat4 view = glm::lookAt(
-         glm::vec3(3.0f, 3.0f, 3.0f),
-         glm::vec3(0.0f, 0.0f, 0.0f),
-         glm::vec3(0.0f, 0.0f, 1.0f)
-         );
-   glm::mat4 proj = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 1.0f, 10.0f);
-   glm::mat4 model = glm::mat4();
-
-   testShader.enable();
-   glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-   glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
-   glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(proj));
 }
 
 void engine::input() {
@@ -119,7 +94,28 @@ void engine::input() {
 }
 
 void engine::update() {
+   testShader.compile("glsl/vertex.glsl", "glsl/fragment.glsl");
+   testShader.link();
 
+   // shader uniforms
+   GLint uniModel = glGetUniformLocation(testShader.program, "model");
+   GLint uniView =  glGetUniformLocation(testShader.program, "view");
+   GLint uniProj =  glGetUniformLocation(testShader.program, "proj");
+
+   glm::mat4 view = glm::lookAt(
+         glm::vec3(3.0f, 3.0f, 3.0f),
+         glm::vec3(0.0f, 0.0f, 0.0f),
+         glm::vec3(0.0f, 0.0f, 1.0f)
+         );
+   glm::mat4 proj = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 1.0f, 10.0f);
+   static glm::mat4 model = glm::mat4();
+      model = glm::rotate(model, glm::radians(1.0f), glm::vec3(0.0, 0.0, 1.0f));
+
+   testShader.enable();
+   glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+   glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
+   glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(proj));
+   testShader.disable();
 }
 
 void engine::render() {

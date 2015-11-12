@@ -29,7 +29,6 @@ void wavefront::open(const char* filename) {
          s >> v.x;
          s >> v.y;
          s >> v.z;
-         //mesh.face.push_back(mesh.vertex.size());
         vertex.push_back(v);
       }
       else if (line[0] == 'f') { // face
@@ -47,7 +46,6 @@ void wavefront::open(const char* filename) {
          }
          s >> v3;
 
-         //std::cerr << v1 << " " << v2 << " " << v3 << std::endl;
          face.push_back(v1-1);
          face.push_back(v2-1);
          face.push_back(v3-1);
