@@ -18,17 +18,34 @@ glsl::~glsl() {
 
 }
 
-void glsl::compile(const char* vertexSourceFilePath, const char* fragmentSourceFilePath){
-   vertexShader = glCreateShader(GL_VERTEX_SHADER);
-   fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-   compile(vertexSourceFilePath, vertexShader);
-   compile(fragmentSourceFilePath, fragmentShader);
+void glsl::compile(
+      const char* vertexSourceFilePath,
+      const char* fragmentSourceFilePath,
+      const char* geometrySourceFilePath){
+   if (vertexSourceFilePath != NULL){
+      vertexShader = glCreateShader(GL_VERTEX_SHADER);
+      compile(vertexSourceFilePath, vertexShader);
+   }
+
+   if (fragmentSourceFilePath != NULL) {
+      fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+      compile(fragmentSourceFilePath, fragmentShader);
+   }
+
+   if (geometrySourceFilePath != NULL) {
+      geometryShader = glCreateShader(GL_GEOMETRY_SHADER);
+      compile(geometrySourceFilePath, geometryShader);
+   }
 }
 void glsl::link(){
    program = glCreateProgram();
 
-   glAttachShader(program, vertexShader);
-   glAttachShader(program, fragmentShader);
+   if (vertexShader != 0)
+      glAttachShader(program, vertexShader);
+   if (fragmentShader != 0)
+      glAttachShader(program, fragmentShader);
+   if (fragmentShader != 0)
+      glAttachShader(program, geometryShader);
 
    //TODO fix this 
    glBindFragDataLocation(program, 0, "outColour");
@@ -49,7 +66,7 @@ void glsl::link(){
 
       std::printf("%s\n", &(errorLog[0]));
    }
-   
+
    glDetachShader(program, vertexShader);
    glDetachShader(program, fragmentShader);
    glDeleteShader(vertexShader);

@@ -7,13 +7,19 @@ class glsl {
       glsl();
       ~glsl();
 
-      void compile(const char* vertexSourceFilePath, const char* fragmentSourceFilePath);
+      void compile(
+            const char* vertexSourceFilePath,
+            const char* fragmentSourceFilePath,
+            const char* geometrySourceFilePath);
       void link();
       void enable();
       void disable();
       void addAttribute(const char* attributeName);
 
-      GLuint program, vertexShader, fragmentShader;
+      GLuint program,
+             vertexShader,
+             fragmentShader,
+             geometryShader;
    private:
       int attributeCount;
 

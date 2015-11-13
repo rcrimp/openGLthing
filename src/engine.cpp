@@ -105,7 +105,10 @@ void engine::input() {
 }
 
 void engine::update() {
-   testShader.compile("glsl/vertex.glsl", "glsl/fragment.glsl");
+   testShader.compile(
+         "glsl/vertex.glsl",
+         "glsl/fragment.glsl",
+         "glsl/geometry.glsl");
    testShader.link();
 
    // shader uniforms
