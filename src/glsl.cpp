@@ -67,10 +67,18 @@ void glsl::link(){
       std::printf("%s\n", &(errorLog[0]));
    }
 
-   glDetachShader(program, vertexShader);
-   glDetachShader(program, fragmentShader);
-   glDeleteShader(vertexShader);
-   glDeleteShader(fragmentShader);
+   if (vertexShader != 0) {
+      glDetachShader(program, vertexShader);
+      glDeleteShader(vertexShader);
+   }
+   if (fragmentShader != 0) {
+      glDetachShader(program, fragmentShader);
+      glDeleteShader(fragmentShader);
+   }
+   if (geometryShader != 0) {
+      glDetachShader(program, geometryShader);
+      glDeleteShader(geometryShader);
+   }
 }
 
 void glsl::enable(){
