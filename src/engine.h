@@ -23,6 +23,8 @@ class engine {
       SDL_Window *window = NULL;
       SDL_GLContext glContext = NULL;
 
+      bool debug_lines = false;
+
       object testObject;
       glsl testShader;
 
@@ -38,5 +40,7 @@ class engine {
       void initShaders();
       void createScene();
       void destroyScene();
+
+      void printGLSupport();
 };
 

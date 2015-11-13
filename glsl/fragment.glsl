@@ -1,8 +1,6 @@
-#version 150 core
+#version 330 core
 out vec4 outColour;
-in vec3 normal;
-in vec3 light;
+in vec4 colour;
 void main() {
-   float i = max(0.1, dot(normal, light));
-   outColour = vec4(i, i, i, 1.0f);
+   outColour = colour;
 }

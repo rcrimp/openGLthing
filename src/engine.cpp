@@ -1,4 +1,5 @@
 #include "engine.h"
+#include <iostream>
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
@@ -30,6 +31,7 @@ void engine::run() {
 void engine::init() {
    createWindow(windowName, windowWidth, windowHeight);
    createOpenGLContext();
+   printGLSupport();
    createScene();
 }
 
@@ -69,19 +71,21 @@ void engine::createScene() {
    initShaders();
    testObject.load();
    
-   //glFrontFace(GL_CCW);
-   //glCullFace(GL_BACK);
-   //glEnable(GL_CULL_FACE);
+   glFrontFace(GL_CCW);
+   glCullFace(GL_BACK);
+   glEnable(GL_CULL_FACE);
    glEnable(GL_DEPTH_TEST);
 
-   /* line mode for debugging */
-   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-   glLineWidth(1.0f);
-   /* line antialiasing */
-   glEnable(GL_BLEND);
-   glEnable(GL_LINE_SMOOTH);
-   glHint(GL_LINE_SMOOTH, GL_NICEST);
-   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   if (debug_lines) {
+      /* line mode for debugging */
+      glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+      glLineWidth(1.0f);
+      /* line antialiasing */
+      glEnable(GL_BLEND);
+      glEnable(GL_LINE_SMOOTH);
+      glHint(GL_LINE_SMOOTH, GL_NICEST);
+      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   }
 }
 
 void engine::destroyScene() {
@@ -105,9 +109,12 @@ void engine::update() {
    testShader.link();
 
    // shader uniforms
-   GLint uniModel = glGetUniformLocation(testShader.program, "model");
-   GLint uniView =  glGetUniformLocation(testShader.program, "view");
-   GLint uniProj =  glGetUniformLocation(testShader.program, "proj");
+   GLuint uniModel = glGetUniformLocation(testShader.program, "model");
+   GLuint uniView =  glGetUniformLocation(testShader.program, "view");
+   GLuint uniProj =  glGetUniformLocation(testShader.program, "proj");
+   if (uniModel == -1 || uniView == -1 || uniProj == -1) {
+      std::cerr << "GLSL error: unable to obtain uniform locations" << std::endl;
+   }
 
    glm::mat4 view = glm::lookAt(
          glm::vec3(3.0f, 3.0f, 0.0f),
@@ -116,7 +123,7 @@ void engine::update() {
          );
    glm::mat4 proj = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 1.0f, 10.0f);
    static glm::mat4 model = glm::mat4();
-      model = glm::rotate(model, glm::radians(1.0f), glm::vec3(0.0, 0.0, 1.0f));
+   model = glm::rotate(model, glm::radians(1.0f), glm::vec3(0.0, 0.0, 1.0f));
 
    testShader.enable();
    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -133,4 +140,13 @@ void engine::render() {
    testShader.disable();
 
    SDL_GL_SwapWindow(window);
+}
+
+void engine::printGLSupport() {
+   GLint val;
+   glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &val);
+   std::cout << "Maximum vertex attributes: " << val << std::endl;
+
+   glGetIntegerv(GL_MAX_LIGHTS, &val);
+   std::cout << "Maximum lights: " << val << std::endl;
 }

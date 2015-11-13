@@ -31,21 +31,25 @@ void object::load() {
 
    glGenBuffers(1, &vbo);
    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-   glBufferData(GL_ARRAY_BUFFER, mesh.vertex.size() * sizeof(glm::vec3), mesh.vertex.data(), GL_STATIC_DRAW);
+   glBufferData(GL_ARRAY_BUFFER, mesh.VBO_len * sizeof(mesh.VBO[0]), mesh.VBO, GL_STATIC_DRAW);
 
    glGenBuffers(1, &ebo);
    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-   glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh.face.size() * sizeof(GLuint), mesh.face.data(), GL_STATIC_DRAW);
+   glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh.EBO_len * sizeof(mesh.EBO[0]), mesh.EBO, GL_STATIC_DRAW);
    
    GLint posAttrib = 0; //glGetAttribLocation(testShader.program, "position");
-   glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (GLvoid*)0);
+   glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
    glEnableVertexAttribArray(posAttrib);
+
+   GLint norAttrib = 2; // get from shader
+   glVertexAttribPointer(norAttrib, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat))); 
+   glEnableVertexAttribArray(norAttrib);
 
    glBindVertexArray(0);
 }
 
 void object::draw() {
    glBindVertexArray(vao);
-   glDrawElements(GL_TRIANGLES, mesh.face.size(), GL_UNSIGNED_INT, 0);
+   glDrawElements(GL_TRIANGLES, mesh.EBO_len, GL_UNSIGNED_INT, 0);
    glBindVertexArray(0);
 }
