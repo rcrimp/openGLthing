@@ -106,10 +106,16 @@ void engine::input() {
 
 void engine::update() {
    testShader.compile(
-         "glsl/vertex.glsl",
-         "glsl/fragment.glsl",
-         "glsl/geometry.glsl");
+         "glsl/lambert.vtx",
+         "glsl/pass_colour.frg",
+         NULL); //"glsl/triangle_identity.geo");
    testShader.link();
+   
+   normalShader.compile(
+         "glsl/normal.vtx",
+         "glsl/const_colour.frg",
+         "glsl/normal.geo");
+   normalShader.link();
 
    // shader uniforms
    GLuint uniModel = glGetUniformLocation(testShader.program, "model");
@@ -133,6 +139,12 @@ void engine::update() {
    glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
    glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(proj));
    testShader.disable();
+
+   normalShader.enable();
+   glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+   glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
+   glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(proj));
+   normalShader.disable();
 }
 
 void engine::render() {
@@ -141,6 +153,10 @@ void engine::render() {
    testShader.enable();
    testObject.draw();
    testShader.disable();
+
+   normalShader.enable();
+   testObject.draw();
+   normalShader.disable();
 
    SDL_GL_SwapWindow(window);
 }

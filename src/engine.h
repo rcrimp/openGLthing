@@ -27,6 +27,7 @@ class engine {
 
       object testObject;
       glsl testShader;
+      glsl normalShader;
 
       void init();
       void input();

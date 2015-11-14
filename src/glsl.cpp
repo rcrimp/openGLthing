@@ -6,6 +6,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <vector>
+#include <iostream>
 #include <fstream>
 
 glsl::glsl() {
@@ -102,6 +103,7 @@ void glsl::addAttribute(const char* attributeName){
 void glsl::compile(const char* sourceFilePath, GLuint id) {
    std::ifstream shaderFile(sourceFilePath);
    if (shaderFile.fail()) {
+      std::cerr << "file: " << sourceFilePath << " not found" << std::endl;
       return;
    };
 
